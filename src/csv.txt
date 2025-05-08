@@ -1,0 +1,139 @@
+import React, { useState } from 'react';
+import * as XLSX from 'xlsx';
+import PivotFields from '../Pivots/PivotFields';
+import PivotTable from '../Pivots/PivotTable';
+import '../styling/UploadCSV.css';
+
+
+const UploadCSV = () => {
+  const [data, setData] = useState([]);
+  const [pivotConfig, setPivotConfig] = useState({
+    rows: [],
+    columns: [],
+    values: [],
+    filters: []
+  });
+  const [aggregationOptions, setAggregationOptions] = useState({});
+
+  const handleFileUpload = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+  
+    reader.onload = (evt) => {
+      const binaryStr = evt.target.result;
+      const workbook = XLSX.read(binaryStr, { type: 'binary' });
+      const sheetName = workbook.SheetNames[0];
+      const sheet = workbook.Sheets[sheetName];
+      
+      // Convert Excel dates to proper JS dates during parsing
+      const jsonData = XLSX.utils.sheet_to_json(sheet, {
+        raw: false,
+        dateNF: 'yyyy-mm-dd'
+      }).map(row => {
+        const processedRow = { ...row };
+        Object.keys(processedRow).forEach(key => {
+          const value = processedRow[key];
+        
+          // If it's a number and likely an Excel serial date
+          if (typeof value === 'number' && value > 10000 && value < 2958465) {
+            const date = excelSerialToDate(value);
+            processedRow[key] = date.toISOString().slice(0, 10);
+          }
+        
+          // If it's a string date
+          else if (typeof value === 'string') {
+            let date;
+        
+            // Handle dd-mm-yyyy format (e.g., 19-04-2024)
+            const ddmmyyyyMatch = value.match(/^(\d{2})-(\d{2})-(\d{4})$/);
+            if (ddmmyyyyMatch) {
+              const [_, dd, mm, yyyy] = ddmmyyyyMatch;
+              date = new Date(`${yyyy}-${mm}-${dd}`);
+            }
+            // Handle yyyy-mm-dd or other parseable formats
+            else if (!isNaN(Date.parse(value))) {
+              date = new Date(value);
+            }
+        
+            if (date instanceof Date && !isNaN(date)) {
+              processedRow[key] = date.toISOString().slice(0, 10);
+            }
+          }
+        });
+        
+        return processedRow;
+      });
+      
+  
+      setData(jsonData);
+      
+      // Initialize with numeric fields as values
+      const numericFields = Object.keys(jsonData[0] || {}).filter(
+        key => typeof jsonData[0][key] === 'number' && !isExcelDate(jsonData[0][key])
+      );
+      
+      const initialAggregation = {};
+      numericFields.forEach(field => {
+        initialAggregation[field] = 'sum';
+      });
+  
+      setPivotConfig({
+        rows: [],
+        columns: [],
+        values: numericFields,
+        filters: []
+      });
+      setAggregationOptions(initialAggregation);
+    };
+  
+    if (file) reader.readAsBinaryString(file);
+  };
+  
+  // Helper functions
+  function excelSerialToDate(serial) {
+    const excelEpoch = new Date(1899, 11, 30);
+    const millisecondsPerDay = 24 * 60 * 60 * 1000;
+    return new Date(excelEpoch.getTime() + (serial - 1) * millisecondsPerDay);
+  }
+  
+  function isExcelDate(value) {
+    // Excel dates are typically numbers between 1 and ~2958465
+    return typeof value === 'number' && value >= 1 && value <= 2958465;
+  }
+
+  return (
+    <div className="upload-container">
+      <div className="upload-section">
+        <label htmlFor="fileUpload" className='upload-button'>
+          Upload Excel File
+        </label>
+        <input
+          type="file"
+          id="fileUpload"
+          accept=".xlsx, .xls, .csv"
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+        />
+      </div>
+
+      {data.length > 0 && (
+        <div className="pivot-container">
+          <PivotFields 
+            columns={Object.keys(data[0])} 
+            pivotConfig={pivotConfig}
+            setPivotConfig={setPivotConfig}
+            aggregationOptions={aggregationOptions}
+            setAggregationOptions={setAggregationOptions}
+          />
+          <PivotTable 
+            data={data} 
+            pivotConfig={pivotConfig}
+            aggregationOptions={aggregationOptions}
+          />
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default UploadCSV;
