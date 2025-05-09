@@ -16,7 +16,6 @@ const PivotFieldList = ({
           className={`field-list ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
         >
           {fields.map((field, index) => {
-            // Create a stable ID for each draggable item that doesn't depend on index
             const uniqueId = `${droppableId}-${field}`;
             
             return (

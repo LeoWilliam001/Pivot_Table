@@ -21,11 +21,6 @@ const PivotFields = ({ columns, pivotConfig, setPivotConfig, aggregationOptions,
       <h3>Pivot Table Fields</h3>
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="fields-section">
-          {/* <div className="available-fields">
-            <h4>Available Fields</h4>
-            <PivotFieldList fields={availableFields} droppableId="available" />
-          </div> */}
-
           <div className="assigned-fields">
             <h4>Available Fields</h4>
             <PivotFieldList fields={availableFields} droppableId="available" />

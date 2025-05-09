@@ -35,7 +35,7 @@
   box-sizing: border-box;
 }
 
-.available-fields, .assigned-fields {
+.assigned-fields {
   flex: 1;
   min-width: 200px;          /* Optional: Ensure they don't collapse too small */
   max-width: 100%;
