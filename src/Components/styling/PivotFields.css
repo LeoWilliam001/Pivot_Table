@@ -18,6 +18,7 @@
   border: none;
   cursor: pointer;
   margin-right: 0px;
+  margin-right: 0px;
   border-radius: 4px 4px 0 0;
 }
 
@@ -31,11 +32,14 @@
   max-width: 500px;  
   max-height: 600px;         /* Prevent overflow */
   overflow-y: auto;          /* Add horizontal scroll if needed */
+  max-width: 500px;  
+  max-height: 600px;         /* Prevent overflow */
+  overflow-y: auto;          /* Add horizontal scroll if needed */
   padding: 10px;
   box-sizing: border-box;
 }
 
-.available-fields, .assigned-fields {
+.assigned-fields {
   flex: 1;
   min-width: 200px;          /* Optional: Ensure they don't collapse too small */
   max-width: 100%;
@@ -48,7 +52,10 @@
 
 .field-list {
   flex:1;
+  flex:1;
   min-height: 100px;
+  max-height: 150px;
+  overflow-x: auto;
   max-height: 150px;
   overflow-x: auto;
   background: white;
