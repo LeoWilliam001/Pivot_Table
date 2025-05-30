@@ -1,50 +1,65 @@
-.pivot-table-container {
-  display: contents;
-  max-width: 1100px; 
-  max-height: 650px;         
-  overflow-x: auto;          
+/* PivotTable.css */
+/* .pivot-table-container{
+  display:contents;
+  max-width: 1100px;
+  max-height: 650px;
+  overflow-x: auto;
   padding: 10px;
   box-sizing: border-box;
-}
-
-
+} */
 .pivot-table {
   display: block;
-  max-width: 1100px;
-  max-height:650px;
-  overflow-x: auto;
   border-collapse: collapse;
+  /* width: 100%; */
+  max-width: 800px;
+  max-height: 500px;
+  overflow-x: auto;
+  font-family: Arial, sans-serif;
   font-size: 14px;
+  text-align: center;
 }
 
 .pivot-table th,
 .pivot-table td {
-  border: 1px solid #ddd;
-  padding: 8px 12px;
-  text-align: left;
+  border: 1px solid #ccc;
+  padding: 6px 10px;
 }
 
 .pivot-table th {
-  background-color: #f2f2f2;
-  position: sticky;
-  top: 0;
-  z-index: 1;
-}
-
-.pivot-table tr:nth-child(even) {
-  background-color: #f9f9f9;
-}
-
-.pivot-table tr:hover {
-  background-color: #f1f1f1;
-}
-
-.pivot-table .row-header {
+  background-color: #f4f4f4;
   font-weight: bold;
-  background-color: #e3f2fd !important;
 }
 
-.pivot-table .grand-total-row {
+.pivot-table thead tr:first-child th {
+  background-color: #e0e0e0;
+  font-size: 15px;
+}
+
+.pivot-table tbody tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.pivot-table .row-total {
+  background-color: #fef3c7;
   font-weight: bold;
-  background-color: #f2f2f2;
+}
+
+.pivot-table .col-total {
+  background-color: #e0f7fa;
+  font-weight: bold;
+}
+
+.pivot-table .grand-total {
+  background-color: #d1fae5;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.pivot-table .value-cell {
+  text-align: right;
+}
+
+.pivot-table .header-cell {
+  background-color: #f0f0f0;
+  font-weight: bold;
 }

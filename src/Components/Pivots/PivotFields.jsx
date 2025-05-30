@@ -7,7 +7,7 @@ import { getAvailableFields } from '../../utils/pivotUtils';
 
 const PivotFields = ({ columns, pivotConfig, setPivotConfig, aggregationOptions, setAggregationOptions }) => {
   const { onDragEnd, handleAggregationChange } = usePivotDrag({
-    columns,
+    columns,              
     pivotConfig,
     setPivotConfig,
     aggregationOptions,
@@ -18,25 +18,44 @@ const PivotFields = ({ columns, pivotConfig, setPivotConfig, aggregationOptions,
 
   return (
     <div className="pivot-fields-container">
-      <h3>Pivot Table Fields</h3>
+      {/* <h3>Pivot Table Fields</h3> */}
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="fields-section">
-          <div className="available-fields">
-            <h4>Available Fields</h4>
-            <PivotFieldList fields={availableFields} droppableId="available" />
+
+          {/* <div className="assigned-fields"> */}
+          <div className="fields-grid">
+              <div>
+                <h4>Available Fields</h4>
+                <PivotFieldList fields={availableFields} droppableId="available" />
+              </div>
+
+              <div>
+                <h4>Rows</h4>
+                <PivotFieldList
+                  fields={pivotConfig.rows}
+                  droppableId="rows"
+                  aggregationOptions={aggregationOptions}
+                  onAggChange={handleAggregationChange}
+                />
+              </div>
+
+              <div>
+                <h4>Columns</h4>
+                <PivotFieldList fields={pivotConfig.columns} droppableId="columns" />
+              </div>
+
+              <div>
+                <h4>Values</h4>
+                <PivotFieldList
+                  fields={pivotConfig.values}
+                  droppableId="values"
+                  aggregationOptions={aggregationOptions}
+                  onAggChange={handleAggregationChange}
+                />
+              </div>
+            </div>
           </div>
-
-          <div className="assigned-fields">
-            <h4>Rows</h4>
-            <PivotFieldList fields={pivotConfig.rows} droppableId="rows" aggregationOptions={aggregationOptions} onAggChange={handleAggregationChange} />
-
-            <h4>Columns</h4>
-            <PivotFieldList fields={pivotConfig.columns} droppableId="columns" />
-
-            <h4>Values</h4>
-            <PivotFieldList fields={pivotConfig.values} droppableId="values" aggregationOptions={aggregationOptions} onAggChange={handleAggregationChange} />
-          </div>
-        </div>
+        {/* </div> */}
       </DragDropContext>
     </div>
   );

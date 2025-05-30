@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import * as XLSX from 'xlsx';
 import PivotFields from '../Pivots/PivotFields';
-import PivotTable from '../Pivots/PivotTable';
+import PivotTable from '../PivotTable/PivotTable';
 import '../styling/UploadCSV.css';
 
 const UploadCSV = () => {
