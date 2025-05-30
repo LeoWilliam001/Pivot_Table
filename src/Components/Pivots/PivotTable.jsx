@@ -156,7 +156,7 @@ const PivotTable = ({ data = [], pivotConfig = { rows: [], columns: [], values: 
                   rowValueTotals[valueField] += value;
                 }
 
-                const display = method === 'average' ? value.toFixed(2) : value;
+                const display = method === 'average' ? value.toFixed(2) : value.toFixed(2);
                 return <td key={`${colKey}-${valueField}`}>{display}</td>;
               })
             ).flat();
@@ -167,7 +167,7 @@ const PivotTable = ({ data = [], pivotConfig = { rows: [], columns: [], values: 
                 {rowCells}
                 {valueFields.map(valueField => (
                   <td key={`rt-${rowKey}-${valueField}`}>
-                    <strong>{rowValueTotals[valueField]}</strong>
+                    <strong>{rowValueTotals[valueField].toFixed(2)}</strong>
                   </td>
                 ))}
               </tr>
@@ -190,7 +190,7 @@ const PivotTable = ({ data = [], pivotConfig = { rows: [], columns: [], values: 
 
                 const display = method === 'average' 
                   ? (columnTotal / rowKeys.length).toFixed(2) 
-                  : columnTotal;
+                  : columnTotal.toFixed(2);
                 return <td key={`ct-${colKey}-${valueField}`}><strong>{display}</strong></td>;
               })
             )}
@@ -209,7 +209,7 @@ const PivotTable = ({ data = [], pivotConfig = { rows: [], columns: [], values: 
 
               const display = method === 'average'
                 ? (grandTotal / (rowKeys.length * columnKeys.length)).toFixed(2)
-                : grandTotal;
+                : grandTotal.toFixed(2);
               return <td key={`gt-${valueField}`}><strong>{display}</strong></td>;
             })}
           </tr>
@@ -220,4 +220,3 @@ const PivotTable = ({ data = [], pivotConfig = { rows: [], columns: [], values: 
 };
 
 export default PivotTable;
-

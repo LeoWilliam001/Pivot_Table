@@ -1,20 +1,25 @@
 export const calculateAggregation = (values, field, method) => {
-    switch (method) {
-      case 'sum':
-        return values.reduce((sum, val) => sum + (Number(val[field]) || 0), 0);
-      case 'average':
-        const sum = values.reduce((sum, val) => sum + (Number(val[field]) || 0), 0);
-        return values.length ? sum / values.length : 0;
-      case 'count':
-        return values.length;
-      case 'min':
-        return Math.min(...values.map(val => Number(val[field]) || 0));
-      case 'max':
-        return Math.max(...values.map(val => Number(val[field]) || 0));
-      default:
-        return values.reduce((sum, val) => sum + (Number(val[field]) || 0), 0);
-    }
-  };
+  switch (method) {
+    case 'sum':
+      return values
+        .reduce((sum, val) => sum + (Number(val[field]) || 0), 0)
+        .toFixed(2);
+    case 'average':
+      const sum = values.reduce((sum, val) => sum + (Number(val[field]) || 0), 0);
+      return values.length ? (sum / values.length).toFixed(2) : '0.00';
+    case 'count':
+      return values.length.toFixed(2); // Count is converted to a string with two decimal places
+    case 'min':
+      return Math.min(...values.map(val => Number(val[field]) || 0)).toFixed(2);
+    case 'max':
+      return Math.max(...values.map(val => Number(val[field]) || 0)).toFixed(2);
+    default:
+      return values
+        .reduce((sum, val) => sum + (Number(val[field]) || 0), 0)
+        .toFixed(2);
+  }
+};
+
   
   export const generatePivotData = (data, pivotConfig) => {
     if (!data || data.length === 0) return { groupedData: {}, rowFields: [], columnFields: [], valueFields: [] };
