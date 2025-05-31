@@ -1,23 +1,7 @@
 import React from "react";
-import {
-  formatHeader,
-  getKeyStr,
-  groupByLevel,
-  countLeafCols,
-  countLeafRows,
-  formatNumber,
-} from "./pivotUtils";
+import { formatHeader, getKeyStr, groupByLevel, countLeafCols, countLeafRows, formatNumber, } from "./pivotUtils";
 
-export const renderCell = ({
-  type,
-  value,
-  key,
-  span,
-  className,
-  rowSpan,
-  isTotal,
-  children,
-}) => {
+export const renderCell = ({ type, value, key, span, className, rowSpan, isTotal, children, }) => {
   const CellComponent = type === "th" ? "th" : "td";
   return (
     <CellComponent
@@ -31,26 +15,15 @@ export const renderCell = ({
   );
 };
 
-export const renderColHeaders = ({
-  colFields,
-  colKeys,
-  valFields,
-  aggregateFuncs,
-  rowFields,
-}) => {
+export const renderColHeaders = ({ colFields, colKeys, valFields, aggregateFuncs, rowFields, }) => {
   const levels = colFields.length || 1;
-  const headerRows = Array(levels + 1)
-    .fill()
-    .map(() => []);
+  const headerRows = Array(levels + 1).fill().map(() => []);
 
   const buildHeaderMatrix = (keys, level = 0) => {
     const grouped = groupByLevel(keys, level);
     for (const val in grouped) {
       const group = grouped[val];
-      headerRows[level].push({
-        value: val,
-        span: countLeafCols(group, level + 1, colFields) * valFields.length,
-      });
+      headerRows[level].push({ value: val, span: countLeafCols(group, level + 1, colFields) * valFields.length, });
       if (level + 1 < levels) buildHeaderMatrix(group, level + 1);
     }
   };
@@ -58,26 +31,13 @@ export const renderColHeaders = ({
   buildHeaderMatrix(colKeys);
 
   headerRows[levels] = colKeys.flatMap(() =>
-    valFields.map((val) => ({
-      value: `${formatHeader(val)} (${aggregateFuncs[val]})`,
-    }))
+    valFields.map((val) => ({ value: `${formatHeader(val)} (${aggregateFuncs[val]})`, }))
   );
 
   if (colFields.length > 0) {
     headerRows.forEach((row, i) => {
-      const cells =
-        i < levels
-          ? [
-              {
-                value: i === 0 ? "Total" : "",
-                span: valFields.length,
-                isTotal: true,
-              },
-            ]
-          : valFields.map((val) => ({
-              value: `${formatHeader(val)} (${aggregateFuncs[val]})`,
-              isTotal: true,
-            }));
+      const cells = i < levels ? [ { value: i === 0 ? "Total" : "", span: valFields.length, isTotal: true, }, ]
+          : valFields.map((val) => ({ value: `${formatHeader(val)} (${aggregateFuncs[val]})`, isTotal: true, }));
       row.push(...cells);
     });
   }
@@ -88,23 +48,10 @@ export const renderColHeaders = ({
         <tr key={`header-row-${rowIndex}`} className="pivot-header-row">
           {rowIndex === 0 &&
             rowFields.map((field, j) =>
-              renderCell({
-                type: "th",
-                key: `row-label-${j}`,
-                value: formatHeader(field),
-                rowSpan: headerRows.length,
-                className: "pivot-row-label-header",
-              })
+              renderCell({ type: "th", key: `row-label-${j}`, value: formatHeader(field), rowSpan: headerRows.length, className: "pivot-row-label-header", })
             )}
           {row.map((cell, i) =>
-            renderCell({
-              type: "th",
-              key: `header-${i}`,
-              value: cell.value,
-              span: cell.span,
-              className: "pivot-col-header",
-              isTotal: cell.isTotal,
-            })
+            renderCell({ type: "th", key: `header-${i}`, value: cell.value, span: cell.span, className: "pivot-col-header", isTotal: cell.isTotal, })
           )}
         </tr>
       ))}
@@ -112,17 +59,7 @@ export const renderColHeaders = ({
   );
 };
 
-export const renderBody = ({
-  rowFields,
-  colFields,
-  rowKeys,
-  colKeys,
-  valFields,
-  pivot,
-  rowTotals,
-  colTotals,
-  grandTotals,
-}) => {
+export const renderBody = ({ rowFields, colFields, rowKeys, colKeys, valFields, pivot, rowTotals, colTotals, grandTotals, }) => {
   const buildRows = (keys, level = 0) => {
     const grouped = groupByLevel(keys, level);
     const rows = [];
@@ -169,23 +106,13 @@ export const renderBody = ({
           valFields.forEach((val) => {
             const total = rowTotals[rowKeyStr]?.[val];
             dataRow.push(
-              renderCell({
-                type: "td",
-                key: `${rowKeyStr}-total-${val}`,
-                value: total != null ? formatNumber(total) : "",
-                className: "pivot-row-total",
-              })
+              renderCell({ type: "td", key: `${rowKeyStr}-total-${val}`, value: total != null ? formatNumber(total) : "", className: "pivot-row-total", })
             );
           });
         }
 
         rows.push([
-          renderCell({
-            type: "td",
-            key: `${level}-${key}`,
-            value: key,
-            className: `pivot-row-label pivot-row-label-level-${level}`,
-          }),
+          renderCell({ type: "td", key: `${level}-${key}`, value: key, className: `pivot-row-label pivot-row-label-level-${level}`, }),
           ...dataRow,
         ]);
       }
@@ -230,34 +157,32 @@ export const renderBody = ({
     </tr>
   );
 
-  const structuredRows = rowFields.length
-    ? buildRows(rowKeys)
-    : [
-        [
-          ...colKeys.flatMap((colKey) =>
-            valFields.map((val) => {
-              const total = colTotals[getKeyStr(colKey)]?.[val];
-              return renderCell({
-                type: "td",
-                key: `val-${getKeyStr(colKey)}-${val}`,
-                value: total != null ? formatNumber(total) : "",
-                className: "pivot-data-cell",
-              });
-            })
-          ),
-          ...(colFields.length
-            ? valFields.map((val) => {
-                const gt = grandTotals[val];
-                return renderCell({
-                  type: "td",
-                  key: `grand-${val}`,
-                  value: gt != null ? formatNumber(gt) : "",
-                  className: "pivot-grand-total",
-                });
-              })
-            : []),
-        ],
-      ];
+  const structuredRows = rowFields.length ? buildRows(rowKeys) : [
+    [
+      ...colKeys.flatMap((colKey) =>
+        valFields.map((val) => {
+          const total = colTotals[getKeyStr(colKey)]?.[val];
+          return renderCell({
+            type: "td",
+            key: `val-${getKeyStr(colKey)}-${val}`,
+            value: total != null ? formatNumber(total) : "",
+            className: "pivot-data-cell",
+          });
+        })
+      ),
+      ...(colFields.length
+        ? valFields.map((val) => {
+            const gt = grandTotals[val];
+            return renderCell({
+              type: "td",
+              key: `grand-${val}`,
+              value: gt != null ? formatNumber(gt) : "",
+              className: "pivot-grand-total",
+            });
+          })
+        : []),
+    ],
+  ];
 
   return (
     <tbody>

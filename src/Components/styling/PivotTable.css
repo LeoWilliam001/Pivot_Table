@@ -1,74 +1,67 @@
 /* PivotTable.css */
-/* .pivot-table-container{
-  display:contents;
-  max-width: 1100px;
-  max-height: 650px;
-  overflow-x: auto;
-  padding: 10px;
-  box-sizing: border-box;
-} */
+
+.pivot-table-container {
+  max-width: 850px; /* Set the max-width on the container */
+  max-height: 510px; /* Set the max-height on the container */
+  overflow-x: auto; /* Enable horizontal scrolling for the container */
+  overflow-y: auto; /* Enable vertical scrolling for the container */
+  border: 1px solid #ccc; /* Optional: Add a border to see its bounds */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add shadow */
+  background-color: #ffffff; /* Optional: Give it a background */
+  border-radius: 8px; /* Optional: Rounded corners */
 }
 
 .pivot-table {
-  display: block;
-  max-width: 1100px;
-  max-height: 650px;
-  overflow-x: auto;
+  /* This table will now take up as much space as it needs
+     and its container will handle the scrolling */
   border-collapse: collapse;
-  /* width: 100%; */
-  max-width: 800px;
-  max-height: 500px;
-  overflow-x: auto;
   font-family: Arial, sans-serif;
   font-size: 14px;
   text-align: center;
+  /* Remove max-width, max-height, and overflow from the table itself */
+  /* width: 100%; - You might want to remove this or be careful with it.
+                   A table usually grows to fit content. If you force width:100%
+                   it might not be wider than its container to trigger scroll.
+                   Let the content dictate its width. */
 }
 
+/* ... rest of your existing table styles ... */
 .pivot-table th,
 .pivot-table td {
   border: 1px solid #ccc;
   padding: 6px 10px;
+  white-space: nowrap; /* Keep content on a single line, preventing wrapping that reduces horizontal space */
 }
 
+/* Add or keep existing styles for headers, rows, and cells */
 .pivot-table th {
   background-color: #f2f2f2;
-  position: sticky;
-  z-index: 1;
+  font-weight: bold;
 }
-
 .pivot-table thead tr:first-child th {
-  top: 0;
-  z-index: 3;
+  background-color: #e6e6fa;
+  font-size: 15px;
 }
-
-.pivot-table thead tr:nth-child(2) th {
-  top: 0px;
-  z-index: 2;
-}
-
-.pivot-table thead tr:nth-child(3) th {
-  top: 0px;
-  z-index: 1;
-}
-
 .pivot-table tbody tr:nth-child(even) {
-  background-color: #fafafa;
+  background-color: #e6e6fa;
 }
-
-.pivot-table tr:hover {
-  background-color: #f1f1f1;
+.pivot-table .row-total {
+  background-color: #fef3c7;
+  font-weight: bold;
 }
-
-.pivot-table .row-header {
+.pivot-table .col-total {
+  background-color: #e0f7fa;
+  font-weight: bold;
+}
+.pivot-table .grand-total {
+  background-color: #d1fae5;
   font-weight: bold;
   font-size: 15px;
 }
-
 .pivot-table .value-cell {
   text-align: right;
 }
-
 .pivot-table .header-cell {
-  background-color: #f0f0f0;
+  background-color: #e6e6fa;
   font-weight: bold;
 }

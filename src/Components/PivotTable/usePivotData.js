@@ -8,32 +8,13 @@ import {
 } from "./pivotUtils";
 
 export const usePivotData = (rawData, pivotConfig, aggregationOptions) => {
-  const {
-    rows: rowFields = [],
-    columns: colFields = [],
-    values: measures = [],
-  } = pivotConfig;
+  const { rows: rowFields = [], columns: colFields = [], values: measures = [], } = pivotConfig;
 
-  const {
-    pivot,
-    rowKeys,
-    colKeys,
-    valFields,
-    aggregateFuncs,
-    rowTotals,
-    colTotals,
-    grandTotals,
-  } = useMemo(() => {
+  const { pivot, rowKeys, colKeys, valFields, aggregateFuncs, rowTotals, colTotals, grandTotals, } = 
+  useMemo(() => {
     if (!rawData.length) {
       return {
-        pivot: {},
-        rowKeys: [],
-        colKeys: [],
-        valFields: [],
-        aggregateFuncs: {},
-        rowTotals: {},
-        colTotals: {},
-        grandTotals: {},
+        pivot: {}, rowKeys: [], colKeys: [], valFields: [], aggregateFuncs: {}, rowTotals: {}, colTotals: {}, grandTotals: {},
       };
     }
 
@@ -109,10 +90,7 @@ export const usePivotData = (rawData, pivotConfig, aggregationOptions) => {
         } else if (aggFunc === "max") {
           if (!maxStore[rowStr]) maxStore[rowStr] = {};
           if (!maxStore[rowStr][colStr]) maxStore[rowStr][colStr] = {};
-          maxStore[rowStr][colStr][valField] = Math.max(
-            maxStore[rowStr][colStr][valField] || value,
-            value
-          );
+          maxStore[rowStr][colStr][valField] = Math.max( maxStore[rowStr][colStr][valField] || value, value );
         }
       });
     });
@@ -175,26 +153,8 @@ export const usePivotData = (rawData, pivotConfig, aggregationOptions) => {
       grandTotals[valField] = calculateTotal(values, aggregateFuncs[valField]);
     });
 
-    return {
-      pivot,
-      rowKeys,
-      colKeys,
-      valFields,
-      aggregateFuncs,
-      rowTotals,
-      colTotals,
-      grandTotals,
-    };
+    return { pivot, rowKeys, colKeys, valFields, aggregateFuncs, rowTotals, colTotals, grandTotals, };
   }, [rawData, rowFields, colFields, measures, aggregationOptions]);
 
-  return {
-    pivot,
-    rowKeys,
-    colKeys,
-    valFields,
-    aggregateFuncs,
-    rowTotals,
-    colTotals,
-    grandTotals,
-  };
+  return { pivot, rowKeys, colKeys, valFields, aggregateFuncs, rowTotals, colTotals, grandTotals, };
 };
